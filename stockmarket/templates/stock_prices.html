@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Stock Prices</title>
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+		<style>
+			body {
+				background-color: black;
+			}
+			.texter {
+				color: white;
+			}
+			.container {
+				max-width: 800px;
+				margin: 0 auto;
+				text-align: center;
+			}
+			form {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin-bottom: 20px;
+			}
+			label {
+				display: block;
+				margin-bottom: 10px;
+				padding-right: 30px;
+			}
+			input[type="text"] {
+				padding: 5px;
+				font-size: 16px;
+				border: 1px solid #ccc;
+				border-radius: 3px;
+			}
+			button[type="submit"] {
+				padding: 5px 10px;
+				font-size: 16px;
+				background-color: #007bff;
+				color: #fff;
+				border: none;
+				border-radius: 3px;
+				cursor: pointer;
+			}
+			button[type="submit"]:hover {
+				background-color: #0062cc;
+			}
+			#graph {
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="texter">
+				<h1>Stock Prices</h1>
+				<p>
+					This project is a simple web application that allows users
+					to view stock prices for a given stock ticker symbol. The
+					application is built using the Django web framework and the
+					Plotly JavaScript library for creating interactive graphs.
+					The user enters the stock ticker symbol in a form on the web
+					page, and the application fetches the latest stock prices
+					from an external API and displays them in a graph on the
+					same page. The graph is updated every minute to show the
+					latest prices.
+				</p>
+				<h5>
+					Please get the correct ticker from Yahoo Finance Website :
+					<a href="https://finance.yahoo.com/">Y_Finance</a>
+				</h5>
+				<p>
+					Ex - Reliance Industries Limited : RELIANCE.NS, not RELIANCE
+				</p>
+				<p>
+					NOTE: This is based on "Close price", not "Adjeusted Close"
+					prices, so the real data may be different but it will be
+					approximately same.
+				</p>
+				<br />
+				<form method="get">
+					<label for="symbol">Enter stock symbol:</label>
+					<input type="text" id="symbol" name="symbol" />
+					<button type="submit">Submit</button>
+				</form>
+				{% if graph %}
+				<h2>Stock name : {{symbol}}</h2>
+				<p>
+					Current Price: {{latest_price}} ------- Percentage
+					Change:{{percentage_change}}
+				</p>
+			</div>
+			<div id="graph"></div>
+			<script>
+				var graph = {{ graph|safe }};
+				Plotly.newPlot('graph', graph, {});
+
+				setInterval(function() {
+				    Plotly.reload('graph');
+				}, 60000);
+				            setInterval(function() {
+				    location.reload();
+				}, 60000);
+				{% comment %} var textElement = document.getElementById('text');
+				if (textElement) {
+				    var text = textElement.text;
+				    console.log(text);
+				} {% endcomment %}
+			</script>
+			{% endif %}
+		</div>
+	</body>
+</html>
